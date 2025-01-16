@@ -39,10 +39,4 @@ This tool empowers professionals to make data-driven decisions efficiently and w
    - Handles large datasets and multiple models with minimal configuration.
    - Designed to integrate seamlessly into existing machine learning pipelines.
 
----
 
-## Installation
-
-Install the package via `pip`:
-```bash
-pip install enhanced-benchmark-tool
