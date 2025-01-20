@@ -1,4 +1,6 @@
 import pandas as pd
+import utils
+
 
 def profile_dataset(file_path):
     """
