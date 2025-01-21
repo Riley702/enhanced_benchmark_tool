@@ -69,3 +69,38 @@ def benchmark_model(model, X, y, test_size=0.2, random_state=42, problem_type='c
         raise ValueError("Invalid problem_type. Use 'classification' or 'regression'.")
 
     return metrics
+
+def extract_feature_importance(model, feature_names=None):
+    """
+    Extracts and returns feature importance from a fitted model, if available.
+
+    Args:
+        model: A trained scikit-learn compatible model.
+        feature_names (list or None): List of feature names. If None, feature indices are used.
+
+    Returns:
+        dict: A dictionary mapping feature names to their importance scores.
+    """
+    if not hasattr(model, "feature_importances_") and not hasattr(model, "coef_"):
+        raise AttributeError("The model does not support feature importance extraction.")
+
+    if feature_names is None:
+        feature_names = [f"Feature {i}" for i in range(len(model.coef_))] if hasattr(model, "coef_") else None
+
+    if hasattr(model, "feature_importances_"):
+        # Tree-based models (e.g., RandomForest, DecisionTree)
+        importances = model.feature_importances_
+    elif hasattr(model, "coef_"):
+        # Linear models (e.g., LogisticRegression, LinearRegression)
+        importances = np.abs(model.coef_).flatten()
+
+    if feature_names:
+        importance_dict = dict(zip(feature_names, importances))
+    else:
+        importance_dict = {f"Feature {i}": importance for i, importance in enumerate(importances)}
+
+    # Normalize importance values for better interpretability
+    total_importance = sum(importance_dict.values())
+    normalized_importance = {k: v / total_importance for k, v in importance_dict.items()}
+
+    return normalized_importance
