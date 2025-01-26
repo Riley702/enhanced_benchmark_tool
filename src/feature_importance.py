@@ -127,3 +127,49 @@ if __name__ == "__main__":
     # Extract feature importance
     feature_importance = extract_feature_importance(model, feature_names=X.columns)
     print("Feature Importance:", feature_importance)
+
+def evaluate_model_with_thresholds(model, X, y, thresholds=None, test_size=0.2, random_state=42):
+    """
+    Evaluates a classification model with varying probability thresholds.
+
+    Args:
+        model: A scikit-learn compatible classification model with `predict_proba` method.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        thresholds (list or None): List of thresholds to evaluate. If None, defaults to [0.1, 0.2, ..., 0.9].
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        pd.DataFrame: DataFrame containing evaluation metrics for each threshold.
+    """
+    if not hasattr(model, "predict_proba"):
+        raise AttributeError("The model must have a `predict_proba` method for threshold evaluation.")
+
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Predict probabilities
+    probabilities = model.predict_proba(X_test)[:, 1]  # Use probabilities for the positive class
+
+    if thresholds is None:
+        thresholds = [i / 10 for i in range(1, 10)]  # Default thresholds: 0.1 to 0.9
+
+    # Evaluate the model at each threshold
+    results = []
+    for threshold in thresholds:
+        predictions = (probabilities >= threshold).astype(int)
+        metrics = {
+            "threshold": threshold,
+            "accuracy": accuracy_score(y_test, predictions),
+            "precision": precision_score(y_test, predictions, zero_division=0),
+            "recall": recall_score(y_test, predictions, zero_division=0),
+            "f1_score": f1_score(y_test, predictions, zero_division=0),
+        }
+        results.append(metrics)
+
+    return pd.DataFrame(results)
+
