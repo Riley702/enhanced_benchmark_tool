@@ -3,6 +3,8 @@ import numpy as np
 import seaborn as sns
 import pandas as pd
 from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.metrics import roc_curve, auc, precision_recall_curve
+
 
 
 def plot_metrics(metrics):
@@ -149,3 +151,47 @@ def plot_correlation_matrix(df):
     sns.heatmap(df.corr(), annot=True, fmt=".2f", cmap="coolwarm", linewidths=0.5)
     plt.title("Feature Correlation Matrix")
     plt.show()
+    
+def plot_roc_curve(y_true, y_scores):
+    """
+    Plots the Receiver Operating Characteristic (ROC) curve.
+
+    Args:
+        y_true (array-like): True binary labels.
+        y_scores (array-like): Predicted probabilities for the positive class.
+    """
+    fpr, tpr, _ = roc_curve(y_true, y_scores)
+    roc_auc = auc(fpr, tpr)
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color="darkorange", lw=2, label=f"ROC curve (AUC = {roc_auc:.2f})")
+    plt.plot([0, 1], [0, 1], color="navy", lw=2, linestyle="--")  # Diagonal line
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("Receiver Operating Characteristic (ROC) Curve")
+    plt.legend(loc="lower right")
+    plt.grid(alpha=0.5)
+    plt.show()
+
+
+def plot_precision_recall_curve(y_true, y_scores):
+    """
+    Plots the Precision-Recall curve.
+
+    Args:
+        y_true (array-like): True binary labels.
+        y_scores (array-like): Predicted probabilities for the positive class.
+    """
+    precision, recall, _ = precision_recall_curve(y_true, y_scores)
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(recall, precision, color="green", lw=2, label="Precision-Recall Curve")
+    plt.xlabel("Recall")
+    plt.ylabel("Precision")
+    plt.title("Precision-Recall Curve")
+    plt.legend(loc="lower left")
+    plt.grid(alpha=0.5)
+    plt.show()
+
