@@ -1,35 +1,151 @@
-from sklearn.model_selection import cross_val_score, StratifiedKFold, KFold
+import pandas as pd
+import utils
 
-def cross_validate_model(model, X, y, cv=5, scoring='accuracy', problem_type='classification', random_state=42):
+
+def profile_dataset(file_path):
     """
-    Performs cross-validation on the given model and returns aggregated metrics.
+    Generates a detailed statistical profile of the dataset.
 
     Args:
-        model: Scikit-learn compatible model.
-        X (pd.DataFrame or np.ndarray): Features.
-        y (pd.Series or np.ndarray): Target.
-        cv (int): Number of folds for cross-validation.
-        scoring (str or list): Metric(s) to evaluate during cross-validation.
-        problem_type (str): 'classification' or 'regression'.
-        random_state (int): Seed for reproducibility in fold generation.
+        file_path (str): Path to the CSV file containing the dataset.
 
     Returns:
-        dict: Aggregated metrics across all folds.
+        dict: Statistical summary including column info and null counts.
     """
-    # Choose the appropriate cross-validation strategy
-    if problem_type == 'classification':
-        cv_strategy = StratifiedKFold(n_splits=cv, shuffle=True, random_state=random_state)
-    elif problem_type == 'regression':
-        cv_strategy = KFold(n_splits=cv, shuffle=True, random_state=random_state)
-    else:
-        raise ValueError("Invalid problem_type. Use 'classification' or 'regression'.")
-
-    # Perform cross-validation
-    scores = cross_val_score(model, X, y, cv=cv_strategy, scoring=scoring, n_jobs=-1)
-
-    # Return results
-    return {
-        "mean_score": np.mean(scores),
-        "std_dev_score": np.std(scores),
-        "all_scores": scores.tolist()
+    data = pd.read_csv(file_path)
+    profile = {
+        "shape": data.shape,
+        "columns": list(data.columns),
+        "null_counts": data.isnull().sum().to_dict(),
+        "data_types": data.dtypes.to_dict(),
+        "summary": data.describe(include="all").to_dict(),
     }
+    return profile
+
+
+def detect_missing_values(df):
+    """
+    Identifies missing values in the dataset.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        pd.DataFrame: Table showing count and percentage of missing values for each column.
+    """
+    missing_values = df.isnull().sum()
+    missing_percent = (missing_values / len(df)) * 100
+
+    missing_df = pd.DataFrame(
+        {"missing_count": missing_values, "missing_percent": missing_percent}
+    )
+    missing_df = missing_df[missing_df["missing_count"] > 0].sort_values(
+        by="missing_percent", ascending=False
+    )
+
+    return missing_df
+
+
+def detect_outliers(df, threshold=1.5):
+    """
+    Identifies outliers in numerical columns using the IQR method.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+        threshold (float): Threshold for determining outliers (default 1.5).
+
+    Returns:
+        dict: Number of outliers detected per numerical column.
+    """
+    outlier_counts = {}
+    for column in df.select_dtypes(include=["number"]).columns:
+        Q1 = df[column].quantile(0.25)
+        Q3 = df[column].quantile(0.75)
+        IQR = Q3 - Q1
+
+        lower_bound = Q1 - (threshold * IQR)
+        upper_bound = Q3 + (threshold * IQR)
+
+        outlier_count = ((df[column] < lower_bound) | (df[column] > upper_bound)).sum()
+        outlier_counts[column] = outlier_count
+
+    return outlier_counts
+
+
+def check_class_balance(df, target_column):
+    """
+    Checks the balance of classes in a categorical target variable.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+        target_column (str): Column name of the target variable.
+
+    Returns:
+        pd.DataFrame: Table showing class distribution and percentage.
+    """
+    class_counts = df[target_column].value_counts()
+    class_percent = (class_counts / len(df)) * 100
+
+    balance_df = pd.DataFrame(
+        {"class_count": class_counts, "class_percent": class_percent}
+    )
+
+    return balance_df
+
+
+def identify_correlations(df, threshold=0.8):
+    """
+    Identifies highly correlated features in a dataset.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+        threshold (float): Correlation threshold to flag variables (default 0.8).
+
+    Returns:
+        list: Pairs of highly correlated features.
+    """
+    corr_matrix = df.corr()
+    correlated_pairs = []
+
+    for i in range(len(corr_matrix.columns)):
+        for j in range(i):
+            if abs(corr_matrix.iloc[i, j]) > threshold:
+                col1, col2 = corr_matrix.columns[i], corr_matrix.columns[j]
+                correlated_pairs.append((col1, col2, corr_matrix.iloc[i, j]))
+
+    return correlated_pairs
+
+
+def generate_summary_statistics(df):
+    """
+    Computes additional summary statistics for numerical features.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        pd.DataFrame: Summary statistics including median, variance, skewness, and kurtosis.
+    """
+    stats_df = pd.DataFrame()
+    numeric_cols = df.select_dtypes(include=["number"])
+
+    stats_df["median"] = numeric_cols.median()
+    stats_df["variance"] = numeric_cols.var()
+    stats_df["skewness"] = numeric_cols.skew()
+    stats_df["kurtosis"] = numeric_cols.kurtosis()
+
+    return stats_df
+
+
+def detect_duplicate_rows(df):
+    """
+    Identifies duplicate rows in a dataset.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        pd.DataFrame: Duplicate rows in the dataset.
+    """
+    duplicates = df[df.duplicated()]
+    return duplicates
