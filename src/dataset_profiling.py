@@ -1,9 +1,6 @@
 import pandas as pd
 import utils
 
-import pandas as pd
-import utils
-
 
 def profile_dataset(file_path):
     """
@@ -119,4 +116,36 @@ def identify_correlations(df, threshold=0.8):
     return correlated_pairs
 
 
+def generate_summary_statistics(df):
+    """
+    Computes additional summary statistics for numerical features.
 
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        pd.DataFrame: Summary statistics including median, variance, skewness, and kurtosis.
+    """
+    stats_df = pd.DataFrame()
+    numeric_cols = df.select_dtypes(include=["number"])
+
+    stats_df["median"] = numeric_cols.median()
+    stats_df["variance"] = numeric_cols.var()
+    stats_df["skewness"] = numeric_cols.skew()
+    stats_df["kurtosis"] = numeric_cols.kurtosis()
+
+    return stats_df
+
+
+def detect_duplicate_rows(df):
+    """
+    Identifies duplicate rows in a dataset.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        pd.DataFrame: Duplicate rows in the dataset.
+    """
+    duplicates = df[df.duplicated()]
+    return duplicates
