@@ -173,3 +173,78 @@ def evaluate_model_with_thresholds(model, X, y, thresholds=None, test_size=0.2, 
 
     return pd.DataFrame(results)
 
+
+def evaluate_model_with_roc_auc(model, X, y, test_size=0.2, random_state=42):
+    """
+    Evaluates a classification model using ROC AUC score and plots the ROC curve.
+
+    Args:
+        model: A scikit-learn compatible classification model with `predict_proba` method.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        dict: Dictionary containing the ROC AUC score and other relevant data.
+    """
+    if not hasattr(model, "predict_proba"):
+        raise AttributeError("The model must have a `predict_proba` method for ROC AUC evaluation.")
+
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Predict probabilities
+    y_scores = model.predict_proba(X_test)[:, 1]  # Use probabilities for the positive class
+
+    # Compute ROC AUC score
+    roc_auc = roc_auc_score(y_test, y_scores)
+
+    # Plot ROC Curve
+    fpr, tpr, _ = roc_curve(y_test, y_scores)
+    plt.figure(figsize=(8, 6))
+    plt.plot(fpr, tpr, color="darkorange", lw=2, label=f"ROC curve (AUC = {roc_auc:.2f})")
+    plt.plot([0, 1], [0, 1], color="navy", lw=2, linestyle="--")  # Diagonal reference line
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("Receiver Operating Characteristic (ROC) Curve")
+    plt.legend(loc="lower right")
+    plt.grid(alpha=0.5)
+    plt.show()
+
+    return {"roc_auc_score": roc_auc}
+
+
+def evaluate_model_with_classification_report(model, X, y, test_size=0.2, random_state=42):
+    """
+    Generates a classification report with precision, recall, and F1-score.
+
+    Args:
+        model: A scikit-learn compatible classification model.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        dict: A detailed classification report.
+    """
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Generate predictions
+    y_pred = model.predict(X_test)
+
+    # Generate classification report
+    report = classification_report(y_test, y_pred, output_dict=True)
+
+    return report
+
