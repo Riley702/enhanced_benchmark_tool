@@ -195,3 +195,77 @@ def plot_precision_recall_curve(y_true, y_scores):
     plt.grid(alpha=0.5)
     plt.show()
 
+def plot_learning_curve(model, X, y, cv=5, train_sizes=np.linspace(0.1, 1.0, 10), scoring="accuracy"):
+    """
+    Plots the learning curve of a model.
+
+    Args:
+        model: A scikit-learn compatible model.
+        X (pd.DataFrame or np.ndarray): Feature matrix.
+        y (pd.Series or np.ndarray): Target values.
+        cv (int): Number of cross-validation folds.
+        train_sizes (array-like): Proportions of training data to evaluate.
+        scoring (str): Scoring metric to evaluate model performance.
+
+    Returns:
+        None
+    """
+    train_sizes, train_scores, val_scores = learning_curve(model, X, y, cv=cv, train_sizes=train_sizes, scoring=scoring, n_jobs=-1)
+
+    train_mean = np.mean(train_scores, axis=1)
+    train_std = np.std(train_scores, axis=1)
+    val_mean = np.mean(val_scores, axis=1)
+    val_std = np.std(val_scores, axis=1)
+
+    plt.figure(figsize=(8, 6))
+    plt.plot(train_sizes, train_mean, label="Training Score", marker="o", color="blue")
+    plt.fill_between(train_sizes, train_mean - train_std, train_mean + train_std, alpha=0.2, color="blue")
+    plt.plot(train_sizes, val_mean, label="Validation Score", marker="o", color="red")
+    plt.fill_between(train_sizes, val_mean - val_std, val_mean + val_std, alpha=0.2, color="red")
+
+    plt.xlabel("Training Set Size")
+    plt.ylabel(scoring.capitalize())
+    plt.title("Learning Curve")
+    plt.legend(loc="lower right")
+    plt.grid(alpha=0.5)
+    plt.show()
+
+
+def plot_feature_distribution(df, feature, bins=30):
+    """
+    Plots the distribution of a numerical feature.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing the feature.
+        feature (str): Column name of the numerical feature.
+        bins (int): Number of bins for the histogram.
+
+    Returns:
+        None
+    """
+    plt.figure(figsize=(8, 6))
+    sns.histplot(df[feature], bins=bins, kde=True, color="blue")
+    plt.xlabel(feature)
+    plt.ylabel("Frequency")
+    plt.title(f"Distribution of {feature}")
+    plt.grid(alpha=0.5)
+    plt.show()
+
+
+def plot_boxplots_for_numerical_features(df, numerical_features):
+    """
+    Creates boxplots for multiple numerical features to detect outliers.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing numerical features.
+        numerical_features (list): List of column names for numerical features.
+
+    Returns:
+        None
+    """
+    plt.figure(figsize=(10, len(numerical_features) * 3))
+    df[numerical_features].plot(kind="box", subplots=True, layout=(len(numerical_features), 1), figsize=(8, len(numerical_features) * 3), notch=True, patch_artist=True)
+    plt.suptitle("Boxplots of Numerical Features", fontsize=14)
+    plt.show()
+
+
