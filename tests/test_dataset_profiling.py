@@ -19,7 +19,7 @@ print("Feature Importance:", feature_importance)
 
 def test_profile_dataset():
     """
-    Test the profile_dataset function with a sample CSV file.
+    Test profile_dataset function with a sample CSV file.
     """
     sample_data = {"A": [1, 2, 3], "B": [4, None, 6]}
     sample_df = pd.DataFrame(sample_data)
