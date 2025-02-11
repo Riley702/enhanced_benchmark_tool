@@ -34,7 +34,7 @@ def test_profile_dataset():
 
 def test_extract_feature_importance():
     """
-    Tests the extract_feature_importance function to ensure correct feature extraction and normalization.
+    Tests extract_feature_importance function to ensure correct feature extraction and normalization.
     """
     # Define a simple dataset
     X_test = pd.DataFrame({"A": [1, 2, 3, 4], "B": [5, 6, 7, 8]})
