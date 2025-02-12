@@ -42,4 +42,42 @@ __all__ = [
 ]
 
 
+def load_config(config_file="config.json"):
+    """
+    Loads configuration settings from a JSON file.
 
+    Args:
+        config_file (str): Path to the configuration file (default: 'config.json').
+
+    Returns:
+        dict: Loaded configuration settings.
+    """
+    if os.path.exists(config_file):
+        with open(config_file, "r") as file:
+            config = json.load(file)
+        return config
+    else:
+        logging.warning(f"Configuration file '{config_file}' not found. Using default settings.")
+        return {}
+
+
+def initialize_logging(log_level=logging.INFO, log_file="benchmark_tool.log"):
+    """
+    Configures logging for the package.
+
+    Args:
+        log_level (int): Logging level (default: logging.INFO).
+        log_file (str): Path to the log file (default: 'benchmark_tool.log').
+
+    Returns:
+        None
+    """
+    logging.basicConfig(
+        level=log_level,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        handlers=[
+            logging.FileHandler(log_file),
+            logging.StreamHandler()
+        ],
+    )
+    logging.info("Logging initialized.")
