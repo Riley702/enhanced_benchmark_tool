@@ -42,21 +42,4 @@ __all__ = [
 ]
 
 
-def load_config(config_file="config.json"):
-    """
-    Loads configuration settings from a JSON file.
-
-    Args:
-        config_file (str): Path to the configuration file (default: 'config.json').
-
-    Returns:
-        dict: Loaded configuration settings.
-    """
-    if os.path.exists(config_file):
-        with open(config_file, "r") as file:
-            config = json.load(file)
-        return config
-    else:
-        logging.warning(f"Configuration file '{config_file}' not found. Using default settings.")
-        return {}
 
