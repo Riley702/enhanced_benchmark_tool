@@ -60,18 +60,3 @@ def load_config(config_file="config.json"):
         logging.warning(f"Configuration file '{config_file}' not found. Using default settings.")
         return {}
 
-
-def initialize_logging(log_level=logging.INFO, log_file="benchmark_tool.log"):
-    """
-    Configures logging for the package.
-
-    Args:
-        log_level (int): Logging level (default: logging.INFO).
-        log_file (str): Path to the log file (default: 'benchmark_tool.log').
-
-    Returns:
-        None
-    """
-    logging.basicConfig(
-        level=log_level,
-        format="%(
