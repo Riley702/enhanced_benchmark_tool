@@ -10,14 +10,26 @@ Modules:
     model_benchmarking - Core benchmarking logic for models.
     visualizations - Utilities for generating data visualizations.
     util - Utility functions for data processing, metrics, logging, and configuration.
+
+Package-Level Functions:
+    - load_config(): Loads configuration settings for the package.
+    - initialize_logging(): Configures logging for debugging and tracking.
+
+Attributes:
+    - VERSION: Defines the current version of the package.
 """
 
-# Make key modules accessible at the package level
+import logging
+import os
+import json
 from . import dataset_profiling
 from . import feature_importance
 from . import model_benchmarking
 from . import visualizations
 from . import util
+
+# Define the version of the package
+VERSION = "1.0.0"
 
 __all__ = [
     "dataset_profiling",
@@ -25,4 +37,41 @@ __all__ = [
     "model_benchmarking",
     "visualizations",
     "util",
+    "load_config",
+    "initialize_logging",
 ]
+
+
+def load_config(config_file="config.json"):
+    """
+    Loads configuration settings from a JSON file.
+
+    Args:
+        config_file (str): Path to the configuration file (default: 'config.json').
+
+    Returns:
+        dict: Loaded configuration settings.
+    """
+    if os.path.exists(config_file):
+        with open(config_file, "r") as file:
+            config = json.load(file)
+        return config
+    else:
+        logging.warning(f"Configuration file '{config_file}' not found. Using default settings.")
+        return {}
+
+
+def initialize_logging(log_level=logging.INFO, log_file="benchmark_tool.log"):
+    """
+    Configures logging for the package.
+
+    Args:
+        log_level (int): Logging level (default: logging.INFO).
+        log_file (str): Path to the log file (default: 'benchmark_tool.log').
+
+    Returns:
+        None
+    """
+    logging.basicConfig(
+        level=log_level,
+        format="%(
