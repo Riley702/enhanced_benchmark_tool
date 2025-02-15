@@ -7,7 +7,6 @@ This module provides utilities for evaluating and comparing machine learning mod
 Key Features:
     - Classification and regression model evaluation
     - Confusion matrices for classification models
-    - Additional regression error metrics, including Adjusted R²
     - Automated classification reports
 """
 
