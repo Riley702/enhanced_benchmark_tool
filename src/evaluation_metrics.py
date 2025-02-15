@@ -2,7 +2,6 @@
 Evaluation Metrics Module
 =========================
 
-This module provides utilities for evaluating and comparing machine learning models.
 
     - Confusion matrices for classification models
     - Automated classification reports
