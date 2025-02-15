@@ -1,6 +1,6 @@
 """
 Evaluation Metrics Modul
-    - Confusion matrices for classification model
+    - Confusion matrices for classification mode
     - Automated classification report
 """
 
