@@ -1,5 +1,15 @@
+"""
+Evaluation Metrics Module
+=========================
 
+This module provides utilities for evaluating and comparing machine learning models.
 
+Key Features:
+    - Classification and regression model evaluation
+    - Confusion matrices for classification models
+    - Additional regression error metrics, including Adjusted R²
+    - Automated classification reports
+"""
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -7,10 +17,13 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
     f1_score,
+    log_loss,
+    roc_auc_score,
     mean_squared_error,
     mean_absolute_error,
     r2_score,
-    confusion_matrix
+    confusion_matrix,
+    classification_report
 )
 import numpy as np
 import time
@@ -54,16 +67,22 @@ def calculate_metrics_comparison(models, X, y, test_size=0.2, random_state=42, p
         if problem_type == 'classification':
             metrics.update({
                 "accuracy": accuracy_score(y_test, predictions),
-                "precision": precision_score(y_test, predictions, average='weighted'),
-                "recall": recall_score(y_test, predictions, average='weighted'),
-                "f1_score": f1_score(y_test, predictions, average='weighted'),
+                "precision": precision_score(y_test, predictions, average='weighted', zero_division=0),
+                "recall": recall_score(y_test, predictions, average='weighted', zero_division=0),
+                "f1_score": f1_score(y_test, predictions, average='weighted', zero_division=0),
             })
+
+            if hasattr(model, "predict_proba"):
+                probabilities = model.predict_proba(X_test)[:, 1]
+                metrics["log_loss"] = log_loss(y_test, probabilities)
+                metrics["roc_auc"] = roc_auc_score(y_test, probabilities)
         elif problem_type == 'regression':
             metrics.update({
                 "mean_squared_error": mean_squared_error(y_test, predictions),
                 "mean_absolute_error": mean_absolute_error(y_test, predictions),
                 "r2_score": r2_score(y_test, predictions),
                 "root_mean_squared_error": mean_squared_error(y_test, predictions, squared=False),
+                "adjusted_r2": compute_adjusted_r2(y_test, predictions, X_train.shape[1]),
             })
         else:
             raise ValueError("Invalid problem_type. Use 'classification' or 'regression'.")
@@ -119,25 +138,4 @@ def compute_regression_errors(models, X, y, test_size=0.2, random_state=42):
     """
     errors = []
 
-    # Split dataset
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-
-    for model_name, model in models.items():
-        model.fit(X_train, y_train)
-        y_pred = model.predict(X_test)
-
-        # Compute regression error metrics
-        mse = mean_squared_error(y_test, y_pred)
-        mae = mean_absolute_error(y_test, y_pred)
-        rmse = np.sqrt(mse)
-        r2 = r2_score(y_test, y_pred)
-
-        errors.append({
-            "Model": model_name,
-            "MSE": mse,
-            "MAE": mae,
-            "RMSE": rmse,
-            "R2 Score": r2
-        })
-
-    return pd.DataFrame(errors)
+    # Split data
