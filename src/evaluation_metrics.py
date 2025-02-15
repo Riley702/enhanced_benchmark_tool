@@ -1,8 +1,8 @@
 """
 Evaluation Metrics Modu
     - Confusion matrices for classification mod
-    - Automated classification report
-"""
+    - Automated classification repor
+""
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
