@@ -1,8 +1,16 @@
 """
-Evaluation Metrics Modu
-    - Confusion matrices for classification mod
-    - Automated classification repor
-""
+Evaluation Metrics Module
+=========================
+
+This module provides utilities for evaluating and comparing machine learning models.
+
+Key Features:
+    - Classification and regression model evaluation
+    - Confusion matrices for classification models
+    - Additional regression error metrics, including Adjusted R²
+    - Log loss and ROC AUC for classification models
+    - Automated classification reports
+"""
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -31,7 +39,9 @@ def calculate_metrics_comparison(models, X, y, test_size=0.2, random_state=42, p
         models (dict): A dictionary where keys are model names and values are model objects.
         X (pd.DataFrame or np.ndarray): Features.
         y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
         random_state (int): Seed for reproducibility.
+        problem_type (str): 'classification' or 'regression'.
 
     Returns:
         dict: A dictionary with model names as keys and their metrics as values.
@@ -129,4 +139,74 @@ def compute_regression_errors(models, X, y, test_size=0.2, random_state=42):
     """
     errors = []
 
-    # Split data
+    # Split dataset
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    for model_name, model in models.items():
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        # Compute regression error metrics
+        mse = mean_squared_error(y_test, y_pred)
+        mae = mean_absolute_error(y_test, y_pred)
+        rmse = np.sqrt(mse)
+        r2 = r2_score(y_test, y_pred)
+        adjusted_r2 = compute_adjusted_r2(y_test, y_pred, X_train.shape[1])
+
+        errors.append({
+            "Model": model_name,
+            "MSE": mse,
+            "MAE": mae,
+            "RMSE": rmse,
+            "R2 Score": r2,
+            "Adjusted R2": adjusted_r2
+        })
+
+    return pd.DataFrame(errors)
+
+
+def compute_classification_report(models, X, y, test_size=0.2, random_state=42):
+    """
+    Computes a detailed classification report for multiple models.
+
+    Args:
+        models (dict): Dictionary of classification models.
+        X (pd.DataFrame or np.ndarray): Feature matrix.
+        y (pd.Series or np.ndarray): Target labels.
+        test_size (float): Proportion of dataset to allocate for testing.
+        random_state (int): Random state for reproducibility.
+
+    Returns:
+        dict: Classification reports for each model.
+    """
+    reports = {}
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    for model_name, model in models.items():
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        # Generate classification report
+        report = classification_report(y_test, y_pred, output_dict=True)
+        reports[model_name] = report
+
+    return reports
+
+
+def compute_adjusted_r2(y_true, y_pred, num_features):
+    """
+    Computes Adjusted R² Score for regression models.
+
+    Args:
+        y_true (array-like): True target values.
+        y_pred (array-like): Predicted values.
+        num_features (int): Number of independent variables.
+
+    Returns:
+        float: Adjusted R² score.
+    """
+    r2 = r2_score(y_true, y_pred)
+    n = len(y_true)
+    adjusted_r2 = 1 - ((1 - r2) * (n - 1) / (n - num_features - 1))
+    return adjusted_r2
