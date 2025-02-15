@@ -2,7 +2,6 @@
 Evaluation Metrics Module
 =========================
 
-This module provides utilities for evaluating and comparing machine learning models.
 
 
 from sklearn.model_selection import train_test_split
