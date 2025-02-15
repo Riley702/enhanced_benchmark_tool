@@ -1,5 +1,5 @@
 """
-Evaluation Metrics Modul
+Evaluation Metrics Modu
     - Confusion matrices for classification mode
     - Automated classification report
 """
