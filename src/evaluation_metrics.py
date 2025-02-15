@@ -38,7 +38,6 @@ def calculate_metrics_comparison(models, X, y, test_size=0.2, random_state=42, p
         models (dict): A dictionary where keys are model names and values are model objects.
         X (pd.DataFrame or np.ndarray): Features.
         y (pd.Series or np.ndarray): Target.
-        test_size (float): Proportion of data for testing.
         random_state (int): Seed for reproducibility.
         problem_type (str): 'classification' or 'regression'.
 
