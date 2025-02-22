@@ -11,7 +11,7 @@ def profile_dataset(file_path):
         file_path (str): Path to the CSV file containing the dataset.
 
     Returns:
-        dict: Statistical summary including column info and null coun
+        dict: Statistical summary including column info and null 
     """
     data = pd.read_csv(file_path)
     profile = {
