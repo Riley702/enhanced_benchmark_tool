@@ -8,7 +8,7 @@ def profile_dataset(file_path):
     Generates a detailed statistical profile of the dataset.
 
     Args:
-        file_path (str): Path to the CSV file containing the dataset.
+        file_path (str): Path to the CSV file containing dataset.
 
     Returns:
         dict: Statistical summary including column info and null counts.
