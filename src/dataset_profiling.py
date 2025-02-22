@@ -11,7 +11,7 @@ def profile_dataset(file_path):
         file_path (str): Path to the CSV file containing the dataset.
 
     Returns:
-        dict: Statistical summary including column info and null 
+        dict: Statistical summary including column info and null counts.
     """
     data = pd.read_csv(file_path)
     profile = {
@@ -188,7 +188,7 @@ def detect_anomalous_values(df, numerical_features, threshold=3.0):
     Args:
         df (pd.DataFrame): Input dataset.
         numerical_features (list): List of numerical feature column names.
-        threshold (float): Number of standard deviations to consider as anomalous
+        threshold (float): Number of standard deviations to consider as anomalous.
 
     Returns:
         dict: Anomalous values for each numerical column.
