@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import utils
 
 
@@ -149,3 +150,20 @@ def detect_duplicate_rows(df):
     """
     duplicates = df[df.duplicated()]
     return duplicates
+
+
+def detect_constant_columns(df):
+    """
+    Identifies columns with constant values.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        list: List of constant columns.
+    """
+    constant_cols = [col for col in df.columns if df[col].nunique() == 1]
+    return constant_cols
+
+
+
