@@ -166,4 +166,42 @@ def detect_constant_columns(df):
     return constant_cols
 
 
+def compute_feature_cardinality(df, categorical_features):
+    """
+    Computes the number of unique values for categorical features.
 
+    Args:
+        df (pd.DataFrame): Input dataset.
+        categorical_features (list): List of categorical feature column names.
+
+    Returns:
+        pd.DataFrame: Cardinality of each categorical feature.
+    """
+    cardinality = {col: df[col].nunique() for col in categorical_features}
+    return pd.DataFrame(list(cardinality.items()), columns=["Feature", "Unique Values"])
+
+
+def detect_anomalous_values(df, numerical_features, threshold=3.0):
+    """
+    Identifies anomalous values based on standard deviations from the mean.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+        numerical_features (list): List of numerical feature column names.
+        threshold (float): Number of standard deviations to consider as anomalous
+
+    Returns:
+        dict: Anomalous values for each numerical column.
+    """
+    anomalies = {}
+
+    for feature in numerical_features:
+        mean = df[feature].mean()
+        std_dev = df[feature].std()
+        lower_bound = mean - (threshold * std_dev)
+        upper_bound = mean + (threshold * std_dev)
+
+        anomaly_indices = df[(df[feature] < lower_bound) | (df[feature] > upper_bound)].index.tolist()
+        anomalies[feature] = anomaly_indices
+
+    return anomalies
