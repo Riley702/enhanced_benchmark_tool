@@ -14,6 +14,30 @@ from sklearn.metrics import (
 )
 import time
 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    roc_curve,
+    classification_report,
+    confusion_matrix,
+    log_loss,
+    mean_squared_error,
+    mean_absolute_error,
+    median_absolute_error,
+    r2_score,
+    mean_squared_log_error,
+    cohen_kappa_score
+)
+import time
+
+
 
 def benchmark_model(model, X, y, test_size=0.2, random_state=42, problem_type='classification'):
     """
@@ -248,26 +272,7 @@ def evaluate_model_with_classification_report(model, X, y, test_size=0.2, random
 
     return report
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_auc_score,
-    roc_curve,
-    classification_report,
-    confusion_matrix,
-    log_loss,
-    mean_squared_error,
-    mean_absolute_error,
-    median_absolute_error,
-    r2_score
-)
-import time
+
 
 
 def evaluate_model_with_log_loss(model, X, y, test_size=0.2, random_state=42):
@@ -331,28 +336,7 @@ def evaluate_model_with_median_absolute_error(model, X, y, test_size=0.2, random
     return {"median_absolute_error": median_abs_error}
 
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-    roc_auc_score,
-    roc_curve,
-    classification_report,
-    confusion_matrix,
-    log_loss,
-    mean_squared_error,
-    mean_absolute_error,
-    median_absolute_error,
-    r2_score,
-    mean_squared_log_error,
-    cohen_kappa_score
-)
-import time
+
 
 
 def evaluate_model_with_log_loss(model, X, y, test_size=0.2, random_state=42):
