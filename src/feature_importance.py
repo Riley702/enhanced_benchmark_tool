@@ -329,3 +329,151 @@ def evaluate_model_with_median_absolute_error(model, X, y, test_size=0.2, random
     median_abs_error = median_absolute_error(y_test, y_pred)
 
     return {"median_absolute_error": median_abs_error}
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    roc_curve,
+    classification_report,
+    confusion_matrix,
+    log_loss,
+    mean_squared_error,
+    mean_absolute_error,
+    median_absolute_error,
+    r2_score,
+    mean_squared_log_error,
+    cohen_kappa_score
+)
+import time
+
+
+def evaluate_model_with_log_loss(model, X, y, test_size=0.2, random_state=42):
+    """
+    Evaluates a classification model using log loss.
+
+    Args:
+        model: A scikit-learn compatible classification model with `predict_proba` method.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        dict: Dictionary containing the log loss value.
+    """
+    if not hasattr(model, "predict_proba"):
+        raise AttributeError("The model must have a `predict_proba` method for log loss evaluation.")
+
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Predict probabilities
+    y_probs = model.predict_proba(X_test)
+
+    # Compute log loss
+    log_loss_value = log_loss(y_test, y_probs)
+
+    return {"log_loss": log_loss_value}
+
+
+def evaluate_model_with_median_absolute_error(model, X, y, test_size=0.2, random_state=42):
+    """
+    Evaluates a regression model using the median absolute error.
+
+    Args:
+        model: A scikit-learn compatible regression model.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        dict: Dictionary containing the median absolute error.
+    """
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Generate predictions
+    y_pred = model.predict(X_test)
+
+    # Compute median absolute error
+    median_abs_error = median_absolute_error(y_test, y_pred)
+
+    return {"median_absolute_error": median_abs_error}
+
+
+def evaluate_model_with_cohen_kappa(model, X, y, test_size=0.2, random_state=42):
+    """
+    Evaluates a classification model using Cohen's Kappa score.
+
+    Args:
+        model: A scikit-learn compatible classification model.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        dict: Dictionary containing the Cohen's Kappa score.
+    """
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Generate predictions
+    y_pred = model.predict(X_test)
+
+    # Compute Cohen's Kappa score
+    kappa_score = cohen_kappa_score(y_test, y_pred)
+
+    return {"cohen_kappa_score": kappa_score}
+
+
+def evaluate_model_with_mean_squared_log_error(model, X, y, test_size=0.2, random_state=42):
+    """
+    Evaluates a regression model using Mean Squared Log Error (MSLE).
+
+    Args:
+        model: A scikit-learn compatible regression model.
+        X (pd.DataFrame or np.ndarray): Features.
+        y (pd.Series or np.ndarray): Target.
+        test_size (float): Proportion of data for testing.
+        random_state (int): Seed for reproducibility.
+
+    Returns:
+        dict: Dictionary containing the MSLE value.
+    """
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+
+    # Fit the model
+    model.fit(X_train, y_train)
+
+    # Generate predictions
+    y_pred = model.predict(X_test)
+
+    # Ensure predictions and actual values are positive for MSLE calculation
+    y_pred = np.maximum(y_pred, 0)
+    y_test = np.maximum(y_test, 0)
+
+    # Compute Mean Squared Log Error
+    msle_value = mean_squared_log_error(y_test, y_pred)
+
+    return {"mean_squared_log_error": msle_value}
+
