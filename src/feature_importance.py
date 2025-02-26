@@ -43,6 +43,12 @@ def benchmark_model(model, X, y, test_size=0.2, random_state=42, problem_type='c
     predictions = model.predict(X_test)
     end_test = time.time()
 
+    # Initialize metrics
+    metrics = {
+        "training_time": end_train - start_train,
+        "testing_time": end_test - start_test,
+    }
+
     if problem_type == 'classification':
         # Classification metrics
         metrics.update({
