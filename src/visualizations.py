@@ -86,7 +86,7 @@ def plot_threshold_metrics(threshold_df):
 
 def plot_residuals(y_true, y_pred):
     """
-    Plots residuals (errors) of a regression model.
+
 
     Args:
         y_true (array-like): True values.
