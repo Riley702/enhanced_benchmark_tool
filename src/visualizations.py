@@ -268,27 +268,6 @@ def plot_boxplots_for_numerical_features(df, numerical_features):
     plt.suptitle("Boxplots of Numerical Features", fontsize=14)
     plt.show()
 
-def plot_metrics(metrics):
-    """
-    Plots benchmark metrics as a bar chart.
-
-    Args:
-        metrics (dict): Dictionary of benchmark metrics.
-    """
-    plt.figure(figsize=(10, 6))
-    names = list(metrics.keys())
-    values = list(metrics.values())
-
-    plt.bar(names, values, color="skyblue")
-    plt.title("Model Performance Metrics")
-    plt.xlabel("Metrics")
-    plt.ylabel("Values")
-    plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle="--", alpha=0.7)
-    plt.tight_layout()
-    plt.show()
-
-
 def plot_pairwise_relationships(df, numerical_features, hue=None):
     """
     Plots pairwise relationships between numerical features.
