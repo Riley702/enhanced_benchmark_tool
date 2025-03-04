@@ -9,7 +9,6 @@ from sklearn.metrics import roc_curve, auc, precision_recall_curve
 
 def plot_metrics(metrics):
     """
-    Plots benchmark metrics as a bar chart.
 
     Args:
         metrics (dict): Dictionary of benchmark metrics.
