@@ -9,8 +9,6 @@ from sklearn.metrics import roc_curve, auc, precision_recall_curve
 
 def plot_metrics(metrics):
     """
-
-    Args:
         metrics (dict): Dictionary of benchmark metrics.
     """
     plt.figure(figsize=(10, 6))
