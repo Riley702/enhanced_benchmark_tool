@@ -9,6 +9,9 @@ from sklearn.metrics import roc_curve, auc, precision_recall_curve
 
 def plot_metrics(metrics):
     """
+    Plots benchmark metrics as a bar chart.
+
+    Args:
         metrics (dict): Dictionary of benchmark metrics.
     """
     plt.figure(figsize=(10, 6))
@@ -83,7 +86,7 @@ def plot_threshold_metrics(threshold_df):
 
 def plot_residuals(y_true, y_pred):
     """
-
+    Plots residuals (errors) of a regression model.
 
     Args:
         y_true (array-like): True values.
@@ -263,6 +266,64 @@ def plot_boxplots_for_numerical_features(df, numerical_features):
     plt.figure(figsize=(10, len(numerical_features) * 3))
     df[numerical_features].plot(kind="box", subplots=True, layout=(len(numerical_features), 1), figsize=(8, len(numerical_features) * 3), notch=True, patch_artist=True)
     plt.suptitle("Boxplots of Numerical Features", fontsize=14)
+    plt.show()
+
+def plot_metrics(metrics):
+    """
+    Plots benchmark metrics as a bar chart.
+
+    Args:
+        metrics (dict): Dictionary of benchmark metrics.
+    """
+    plt.figure(figsize=(10, 6))
+    names = list(metrics.keys())
+    values = list(metrics.values())
+
+    plt.bar(names, values, color="skyblue")
+    plt.title("Model Performance Metrics")
+    plt.xlabel("Metrics")
+    plt.ylabel("Values")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_pairwise_relationships(df, numerical_features, hue=None):
+    """
+    Plots pairwise relationships between numerical features.
+
+    Args:
+        df (pd.DataFrame): DataFrame containing numerical features.
+        numerical_features (list): List of column names to visualize.
+        hue (str, optional): Categorical column for coloring points.
+
+    Returns:
+        None
+    """
+    sns.pairplot(df[numerical_features + ([hue] if hue else [])], hue=hue, diag_kind="kde", markers="o")
+    plt.suptitle("Pairwise Relationships Between Numerical Features", fontsize=14)
+    plt.show()
+
+
+def plot_category_vs_numerical(df, categorical_feature, numerical_feature):
+    """
+    Creates a box plot comparing a categorical feature against a numerical feature.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame.
+        categorical_feature (str): Name of the categorical column.
+        numerical_feature (str): Name of the numerical column.
+
+    Returns:
+        None
+    """
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x=df[categorical_feature], y=df[numerical_feature], palette="coolwarm")
+    plt.xlabel(categorical_feature)
+    plt.ylabel(numerical_feature)
+    plt.title(f"{numerical_feature} Distribution Across {categorical_feature} Categories")
+    plt.grid(alpha=0.5)
     plt.show()
 
 
