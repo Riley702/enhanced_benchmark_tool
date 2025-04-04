@@ -225,6 +225,8 @@ def evaluate_model_with_confidence_interval(model, X, y, test_size=0.2, random_s
         alpha (float): Significance level for confidence interval (default is 0.05 for 95%).
 
 
+    Returns:
+        dict: Accuracy score and confidence interval bounds.
     """
     np.random.seed(random_state)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
