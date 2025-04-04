@@ -210,3 +210,31 @@ def compute_adjusted_r2(y_true, y_pred, num_features):
     n = len(y_true)
     adjusted_r2 = 1 - ((1 - r2) * (n - 1) / (n - num_features - 1))
     return adjusted_r2
+
+def evaluate_model_with_confidence_interval(model, X, y, test_size=0.2, random_state=42, n_bootstrap=1000, alpha=0.05):
+    """
+    
+    """
+    np.random.seed(random_state)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    base_accuracy = accuracy_score(y_test, y_pred)
+    accuracies = []
+
+    for _ in range(n_bootstrap):
+        indices = np.random.choice(len(y_test), size=len(y_test), replace=True)
+        bootstrap_y_true = y_test[indices] if isinstance(y_test, np.ndarray) else y_test.iloc[indices]
+        bootstrap_y_pred = y_pred[indices] if isinstance(y_pred, np.ndarray) else pd.Series(y_pred).iloc[indices]
+        accuracies.append(accuracy_score(bootstrap_y_true, bootstrap_y_pred))
+
+    lower = np.percentile(accuracies, 100 * (alpha / 2))
+    upper = np.percentile(accuracies, 100 * (1 - alpha / 2))
+
+    return {
+        "accuracy": base_accuracy,
+        f"{int((1 - alpha) * 100)}%_CI": (lower, upper)
+    }
+
