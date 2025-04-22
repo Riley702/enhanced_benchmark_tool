@@ -1,5 +1,7 @@
 # Enhanced Benchmark Creation Tool
 
+Author: Yisong Chen
+
 The **Enhanced Benchmark Creation Tool** is an advanced Python package tailored for data scientists, analysts, and machine learning practitioners who require a robust solution for profiling datasets and benchmarking machine learning models. By integrating automated statistical profiling, model benchmarking, and performance visualization, this tool simplifies and enhances the process of evaluating datasets and algorithms across diverse domains.
 
 ---
