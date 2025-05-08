@@ -224,3 +224,18 @@ def analyze_column_types(df):
     }
     return types_summary
 
+def find_high_missing_columns(df, threshold=0.5):
+    """
+    Identifies columns with missing value percentage higher than the given threshold.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+        threshold (float): Proportion threshold (e.g., 0.5 for 50%).
+
+    Returns:
+        list: Columns exceeding the missing value threshold.
+    """
+    missing_ratios = df.isnull().mean()
+    high_missing = missing_ratios[missing_ratios > threshold].index.tolist()
+    return high_missing
+
