@@ -239,3 +239,26 @@ def find_high_missing_columns(df, threshold=0.5):
     high_missing = missing_ratios[missing_ratios > threshold].index.tolist()
     return high_missing
 
+def summarize_top_n_categories(df, column, n=5):
+    """
+    Summarizes the top N most frequent categories in a categorical column.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+        column (str): Categorical column name.
+        n (int): Number of top categories to return.
+
+    Returns:
+        pd.DataFrame: Top N categories and their frequency and percentage.
+    """
+    value_counts = df[column].value_counts()
+    top_n = value_counts.head(n)
+    top_n_percent = (top_n / len(df)) * 100
+
+    return pd.DataFrame({
+        "Category": top_n.index,
+        "Frequency": top_n.values,
+        "Percentage": top_n_percent.values.round(2)
+    })
+
+
