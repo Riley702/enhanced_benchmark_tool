@@ -205,3 +205,22 @@ def detect_anomalous_values(df, numerical_features, threshold=3.0):
         anomalies[feature] = anomaly_indices
 
     return anomalies
+
+def analyze_column_types(df):
+    """
+    Analyzes and summarizes the types of columns in the dataset.
+
+    Args:
+        df (pd.DataFrame): Input dataset.
+
+    Returns:
+        dict: Counts of numeric, categorical, datetime, and boolean columns.
+    """
+    types_summary = {
+        "numeric_columns": len(df.select_dtypes(include=["number"]).columns),
+        "categorical_columns": len(df.select_dtypes(include=["object", "category"]).columns),
+        "datetime_columns": len(df.select_dtypes(include=["datetime"]).columns),
+        "boolean_columns": len(df.select_dtypes(include=["bool"]).columns),
+    }
+    return types_summary
+
