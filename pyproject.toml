@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "enhanced-benchmark-tool"
+version = "0.1.0"
+description = "Dataset profiling and model benchmarking utilities."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Yisong Chen" }]
+keywords = ["benchmark", "profiling", "machine-learning", "scikit-learn"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "pandas>=1.0.0",
+  "numpy>=1.18.0",
+  "scikit-learn>=0.24.0",
+  "matplotlib>=3.2.0",
+  "seaborn>=0.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+]
+
+[project.scripts]
+ebt-profile = "enhanced_benchmark_tool.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

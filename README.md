@@ -1,44 +1,44 @@
-# Enhanced Benchmark Creation Tool
+# Enhanced Benchmark Tool
 
-Author: Yisong Chen
+A small Python package for **dataset profiling** and **model benchmarking** (scikit-learn compatible).
 
-The **Enhanced Benchmark Creation Tool** is an advanced Python package tailored for data scientists, analysts, and machine learning practitioners who require a robust solution for profiling datasets and benchmarking machine learning models. By integrating automated statistical profiling, model benchmarking, and performance visualization, this tool simplifies and enhances the process of evaluating datasets and algorithms across diverse domains.
+## Install (dev)
 
----
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -e '.[dev]'
+```
 
-## Purpose and Motivation
+## Quickstart
 
-Machine learning workflows often require significant time and effort to:
-1. Understand the structure and quality of datasets.
-2. Evaluate multiple models across various metrics.
-3. Generate reproducible benchmarks with comprehensive diagnostics.
+### Dataset profiling
 
-The **Enhanced Benchmark Creation Tool**, developed by **Yisong Chen**, addresses these challenges by:
-- Automating dataset profiling with detailed statistical summaries.
-- Standardizing benchmarking for machine learning models using core metrics like accuracy, precision, recall, F1 score, and runtime performance.
-- Enabling seamless comparison of models through intuitive visualizations.
+```python
+from enhanced_benchmark_tool import profile_dataset
 
-This tool empowers professionals to make data-driven decisions efficiently and with precision.
+profile = profile_dataset("data.csv")
+print(profile["shape"], profile["columns"])
+```
 
----
+### Model benchmarking
 
-## Key Features
+```python
+from sklearn.tree import DecisionTreeClassifier
+import pandas as pd
+from enhanced_benchmark_tool import benchmark_model
 
-1. **Dataset Profiling**:
-   - Provides detailed insights into the structure, data types, missing values, and statistical summaries of datasets.
-   - Automatically identifies potential issues such as null values or unexpected data distributions.
+df = pd.DataFrame({"A": [1,2,3,4], "B": [5,6,7,8], "target": [0,1,0,1]})
+X = df[["A","B"]]
+y = df["target"]
 
-2. **Model Benchmarking**:
-   - Automates model evaluation using key metrics such as accuracy, precision, recall, and F1 score.
-   - Measures training and inference times to assess computational efficiency.
-   - Compatible with any scikit-learn-compatible model.
+metrics = benchmark_model(DecisionTreeClassifier(), X, y)
+print(metrics["accuracy"], metrics["training_time"])
+```
 
-3. **Performance Visualization**:
-   - Generates bar charts of model metrics for easy interpretation and reporting.
-   - Supports customization for different metric displays.
+## CLI
 
-4. **Scalability**:
-   - Handles large datasets and multiple models with minimal configuration.
-   - Designed to integrate seamlessly into existing machine learning pipelines.
-
-
+```bash
+ebt-profile --input data.csv
+```
