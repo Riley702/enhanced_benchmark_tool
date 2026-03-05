@@ -42,3 +42,12 @@ print(metrics["accuracy"], metrics["training_time"])
 ```bash
 ebt-profile --input data.csv
 ```
+
+## Development
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+pip install -e '.[dev]'
+pytest -q
+```
