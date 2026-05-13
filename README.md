@@ -1,3 +1,5 @@
+author: Yisong Chen
+
 # Enhanced Benchmark Tool
 
 A small Python package for **dataset profiling** and **model benchmarking** (scikit-learn compatible).
